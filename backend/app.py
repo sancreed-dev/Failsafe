@@ -1,3 +1,5 @@
+import os
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
@@ -27,12 +29,22 @@ seed_demo_user()
 
 app = FastAPI(title="FAILSAFE API")
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=[
+
+def _cors_origins() -> list[str]:
+    defaults = [
         "http://127.0.0.1:5173",
         "http://localhost:5173",
-    ],
+    ]
+    extra = os.getenv("FAILSAFE_CORS_ORIGINS", "")
+    if extra:
+        defaults.extend(origin.strip() for origin in extra.split(",") if origin.strip())
+    return defaults
+
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=_cors_origins(),
+    allow_origin_regex=r"https://.*\.vercel\.app",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

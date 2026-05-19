@@ -87,9 +87,16 @@ Official dataset: [UCI Student Performance](https://archive.ics.uci.edu/dataset/
 
 | Variable                 | Default                         | Purpose                          |
 | ------------------------ | ------------------------------- | -------------------------------- |
-| `VITE_API_BASE_URL`      | `http://127.0.0.1:8000`         | Frontend API base URL            |
-| `FAILSAFE_SECRET_KEY`    | dev secret in code              | JWT signing key                  |
+| `VITE_API_BASE_URL`      | `http://127.0.0.1:8000`         | Frontend API base URL (set on **Vercel** at build time) |
+| `FAILSAFE_CORS_ORIGINS`  | (none)                          | Extra CORS origins for Render (comma-separated) |
+| `FAILSAFE_SECRET_KEY`    | dev secret in code              | JWT signing key (set on **Render**)              |
 | `FAILSAFE_TOKEN_TTL_MINUTES` | `480`                       | Token lifetime in minutes        |
+
+### Vercel + Render
+
+1. **Vercel** → Environment Variables → `VITE_API_BASE_URL=https://failsafe-naix.onrender.com` (no trailing slash) → **Redeploy**
+2. **Render** → redeploy after pulling latest backend (CORS allows `*.vercel.app`)
+3. Optional on Render: `FAILSAFE_CORS_ORIGINS=https://your-custom-domain.com`
 
 ## API routes
 

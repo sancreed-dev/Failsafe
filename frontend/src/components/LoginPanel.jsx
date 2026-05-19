@@ -1,6 +1,6 @@
 import { useState } from "react"
 
-import { api, setAuthToken } from "../api"
+import { api, API_BASE_URL, setAuthToken } from "../api"
 
 function LoginPanel({ onLogin }) {
   const [email, setEmail] = useState("faculty@failsafe.edu")
@@ -20,7 +20,18 @@ function LoginPanel({ onLogin }) {
       localStorage.setItem("failsafe_user", JSON.stringify(response.data.user))
       onLogin(response.data.user, response.data.access_token)
     } catch (err) {
-      setError(err.response?.data?.detail || "Login failed")
+      if (!err.response) {
+        const misconfigured =
+          import.meta.env.PROD &&
+          (API_BASE_URL.includes("127.0.0.1") || API_BASE_URL.includes("localhost"))
+        setError(
+          misconfigured
+            ? `API is pointing to ${API_BASE_URL}. Set VITE_API_BASE_URL to your Render URL in Vercel and redeploy.`
+            : `Cannot reach API at ${API_BASE_URL}. Check that Render is running and CORS allows this site.`,
+        )
+      } else {
+        setError(err.response?.data?.detail || "Login failed")
+      }
     } finally {
       setLoading(false)
     }

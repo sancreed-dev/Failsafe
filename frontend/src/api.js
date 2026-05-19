@@ -6,6 +6,7 @@ export { API_BASE_URL } from "./config/api"
 
 export const api = axios.create({
   baseURL: API_BASE_URL,
+  timeout: 120000,
 })
 
 export function setAuthToken(token) {

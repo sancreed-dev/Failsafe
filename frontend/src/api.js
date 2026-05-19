@@ -17,8 +17,24 @@ export function setAuthToken(token) {
   }
 }
 
-export function chartUrl(path) {
-  if (!path) return `${API_BASE_URL}/charts/shap_summary.png`
-  if (path.startsWith("http")) return path
-  return `${API_BASE_URL}${path}`
+export function chartUrl(path, cacheKey) {
+  let url
+
+  if (!path) {
+    url = `${API_BASE_URL}/charts/shap_summary.png`
+  } else if (path.startsWith("http://") || path.startsWith("https://")) {
+    url = path.startsWith("http://") && import.meta.env.PROD
+      ? path.replace(/^http:\/\//, "https://")
+      : path
+  } else {
+    const normalizedPath = path.startsWith("/") ? path : `/${path}`
+    url = `${API_BASE_URL}${normalizedPath}`
+  }
+
+  if (cacheKey) {
+    const separator = url.includes("?") ? "&" : "?"
+    return `${url}${separator}v=${encodeURIComponent(cacheKey)}`
+  }
+
+  return url
 }

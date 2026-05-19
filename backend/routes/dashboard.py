@@ -1,17 +1,19 @@
 import json
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Request
 
 try:
     from backend.utils.auth import get_current_user
     from backend.utils.database import latest_snapshots
     from backend.models.predictor import predict_batch
     from backend.utils.preprocess import METRICS_PATH, load_data
+    from backend.utils.public_url import get_public_api_base
 except ModuleNotFoundError:
     from utils.auth import get_current_user
     from utils.database import latest_snapshots
     from models.predictor import predict_batch
     from utils.preprocess import METRICS_PATH, load_data
+    from utils.public_url import get_public_api_base
 
 router = APIRouter()
 
@@ -24,7 +26,7 @@ def _risk_counts(predictions):
 
 
 @router.get("/dashboard")
-def dashboard(user=Depends(get_current_user)):
+def dashboard(request: Request, user=Depends(get_current_user)):
     X, y, original = load_data()
     predictions = predict_batch(X)
     counts = _risk_counts(predictions)
@@ -62,7 +64,7 @@ def dashboard(user=Depends(get_current_user)):
         "subject_summary": subject_summary,
         "model_metrics": _load_model_metrics(),
         "snapshots": latest_snapshots(),
-        "shap_url": "/charts/shap_summary.png",
+        "shap_url": f"{get_public_api_base(request)}/charts/shap_summary.png",
     }
 
 

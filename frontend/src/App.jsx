@@ -22,6 +22,7 @@ function App() {
   const [loading, setLoading] = useState(Boolean(user))
   const [detailLoading, setDetailLoading] = useState(false)
   const [error, setError] = useState("")
+  const [chartCacheKey, setChartCacheKey] = useState("")
 
   useEffect(() => {
     const token = localStorage.getItem("failsafe_token")
@@ -42,6 +43,7 @@ function App() {
       setDashboard(dashboardRes.data)
       setAnalytics(analyticsRes.data)
       setStudents(studentsRes.data)
+      setChartCacheKey(String(Date.now()))
       setSelectedStudent((current) => current || studentsRes.data[0] || null)
     } catch (err) {
       if (err.response?.status === 401) {
@@ -150,7 +152,12 @@ function App() {
           <HODPanel dashboard={dashboard} analytics={analytics} />
           <Dashboard data={dashboard} />
           <TrendGraph data={dashboard.subject_summary || []} snapshots={dashboard.snapshots || []} />
-          <SHAPChart path={dashboard.shap_url} explanation={studentExplanation} loading={detailLoading} />
+          <SHAPChart
+            path={dashboard.shap_url}
+            explanation={studentExplanation}
+            loading={detailLoading}
+            cacheKey={chartCacheKey}
+          />
           <StudentView
             students={visibleStudents}
             selectedStudent={selectedStudent}

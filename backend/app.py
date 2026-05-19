@@ -6,6 +6,7 @@ from fastapi.staticfiles import StaticFiles
 
 try:
     from backend.routes.auth import router as auth_router
+    from backend.routes.charts import router as charts_router
     from backend.routes.dashboard import router as dashboard_router
     from backend.routes.predict import router as predict_router
     from backend.routes.report import router as report_router
@@ -15,6 +16,7 @@ try:
     from backend.utils.preprocess import CHART_DIR, ensure_directories
 except ModuleNotFoundError:
     from routes.auth import router as auth_router
+    from routes.charts import router as charts_router
     from routes.dashboard import router as dashboard_router
     from routes.predict import router as predict_router
     from routes.report import router as report_router
@@ -50,6 +52,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+app.include_router(charts_router)
 app.include_router(report_router)
 app.include_router(upload_router)
 app.include_router(predict_router)

@@ -89,6 +89,7 @@ Official dataset: [UCI Student Performance](https://archive.ics.uci.edu/dataset/
 | ------------------------ | ------------------------------- | -------------------------------- |
 | `VITE_API_BASE_URL`      | `http://127.0.0.1:8000`         | Frontend API base URL (set on **Vercel** at build time) |
 | `FAILSAFE_CORS_ORIGINS`  | (none)                          | Extra CORS origins for Render (comma-separated) |
+| `FAILSAFE_PUBLIC_URL`    | (from request headers)          | Public API URL for chart links on **Render**      |
 | `FAILSAFE_SECRET_KEY`    | dev secret in code              | JWT signing key (set on **Render**)              |
 | `FAILSAFE_TOKEN_TTL_MINUTES` | `480`                       | Token lifetime in minutes        |
 

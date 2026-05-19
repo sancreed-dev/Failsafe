@@ -7,7 +7,7 @@ import HODPanel from "./components/HODPanel"
 import LoginPanel from "./components/LoginPanel"
 import SHAPChart from "./components/SHAPChart"
 import TrendGraph from "./components/TrendGraph"
-import { api, setAuthToken } from "./api"
+import { api, API_BASE_URL, setAuthToken } from "./api"
 
 function App() {
   const [user, setUser] = useState(() => {
@@ -50,7 +50,7 @@ function App() {
       }
       setError(
         err.response?.data?.detail ||
-          "Could not reach the FAILSAFE API. Start FastAPI on port 8000.",
+          `Could not reach the FAILSAFE API at ${API_BASE_URL}.`,
       )
     } finally {
       setLoading(false)
